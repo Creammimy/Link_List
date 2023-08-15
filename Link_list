@@ -1,0 +1,141 @@
+public class ListNum {
+    private Node head = null;
+
+    // ... (โค้ดที่มีอยู่เดิม) ...
+
+    // 1. การหาขนาด linked list
+    public int size() {
+        int count = 0;
+        Node current = head;
+        while (current != null) {
+            count++;
+            current = current.getLink();
+        }
+        return count;
+    }
+
+    // 2. การเพิ่มจากด้านหลังลิสต์
+    public void addToEnd(int newInfo) {
+        Node newNode = new Node(newInfo);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.getLink() != null) {
+                current = current.getLink();
+            }
+            current.setLink(newNode);
+        }
+    }
+
+    // 3. การเพิ่มโดยการเรียงลำดับ (แทรกในตำแหน่งที่ทำให้ลิสต์เรียงลำดับจากน้อยไปมาก)
+    public void insertSorted(int newInfo) {
+        Node newNode = new Node(newInfo);
+        if (head == null || newInfo <= head.getInfo()) {
+            newNode.setLink(head);
+            head = newNode;
+            return;
+        }
+        Node current = head;
+        while (current.getLink() != null && newInfo > current.getLink().getInfo()) {
+            current = current.getLink();
+        }
+        newNode.setLink(current.getLink());
+        current.setLink(newNode);
+    }
+
+    // 4. การลบจากด้านหน้าลิสต์
+    public void removeFromFront() {
+        if (head != null) {
+            head = head.getLink();
+        }
+    }
+
+    // 5. การลบจากด้านหลังลิสต์
+    public void removeFromEnd() {
+        if (head == null || head.getLink() == null) {
+            head = null;
+            return;
+        }
+        Node current = head;
+        while (current.getLink().getLink() != null) {
+            current = current.getLink();
+        }
+        current.setLink(null);
+    }
+
+    // 6. การค้นหาเลขที่ต้องการในลิสต์
+    public int search(int target) {
+        int index = 1;
+        Node current = head;
+        while (current != null) {
+            if (current.getInfo() == target) {
+                return index;
+            }
+            current = current.getLink();
+            index++;
+        }
+        return -1; // ไม่พบเลขที่ต้องการ
+    }
+
+    // 7. การลบเลขที่ต้องการในลิสต์
+    public void remove(int target) {
+        if (head == null) {
+            return;
+        }
+        if (head.getInfo() == target) {
+            head = head.getLink();
+            return;
+        }
+        Node current = head;
+        while (current.getLink() != null) {
+            if (current.getLink().getInfo() == target) {
+                current.setLink(current.getLink().getLink());
+                return;
+            }
+            current = current.getLink();
+        }
+    }
+
+    public static void main(String[] args) {
+        ListNum listNum1 = new ListNum();
+        listNum1.addNode(10);
+        listNum1.addNode(20);
+        listNum1.addNode(30);
+
+        System.out.println("Original List:");
+        System.out.println(listNum1);
+
+        // Test the new methods
+        System.out.println("Size: " + listNum1.size());
+
+        listNum1.addToEnd(40);
+        System.out.println("List after adding 40 to the end:");
+        System.out.println(listNum1);
+
+        listNum1.insertSorted(5);
+        System.out.println("List after inserting 5 in sorted order:");
+        System.out.println(listNum1);
+
+        listNum1.removeFromFront();
+        System.out.println("List after removing from the front:");
+        System.out.println(listNum1);
+
+        listNum1.removeFromEnd();
+        System.out.println("List after removing from the end:");
+        System.out.println(listNum1);
+
+        int searchTarget = 20;
+        int searchResult = listNum1.search(searchTarget);
+        if (searchResult != -1) {
+            System.out.println("Found " + searchTarget + " at position " + searchResult);
+        } else {
+            System.out.println(searchTarget + " not found in the list.");
+        }
+
+        int removeTarget = 30;
+        listNum1.remove(removeTarget);
+        System.out.println("List after removing " + removeTarget + ":");
+        System.out.println(listNum1);
+    }
+}
